@@ -4,9 +4,8 @@ library(ape)
 library(phytools)
 
 # Here we pull in the functions that we have written
-source("functions.R")
+source("functions.R") 
 #play with values using the mean function. 
-
 
 
 #### random tree data 
@@ -46,21 +45,29 @@ plot(tree, tip.color = "black")
 
 
 #2
-tree <- rcoal(50)
+taxaN <- 5
+tree <- rcoal(taxaN)
 
 ### inputs for the table
-imp.vals <- sample(c(0,0.5,0.8,1), 50, replace=T, prob=c(0.8,0.05,0.05,0.1))
-data.vals <- sample(50)
+imp.vals <- sample(x=c(0,0,0,1), size=taxaN , replace=T, prob=c(0.8,0,0,0.2))
+data.vals <- sample(x=c(0,0,0,1), size=taxaN , replace=T, prob=c(0.8,0,0,0.2))
 species.names <- tree$tip.label ### these are the species names 
 
 
 df <- data.frame(species.names, imp.vals, data.vals)
 
+# to get syn.imp.vals
+syn.imp.table <- SeqDef(tree=tree, table=df)
 
-SeqDef(tree = tree, table = df)
-tree$tip.label <- df2$syn.imp.vals
-plot(tree, tip.color = "blue", cex=0.5, node.color = "black", 
+syn.dat.table <- SeqDef2(tree = tree, table = df)
+
+
+
+
+plot(tree, tip.color = "blue", cex=0.95, node.color = "black", 
       main="Tree With Synthetic Importance Values")
+
+
 
 
 
