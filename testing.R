@@ -2,6 +2,8 @@
 ###getting the required packages (step 1), and loading them. 
 library(ape)
 library(phytools)
+
+# Here we pull in the functions that we have written
 source("functions.R")
 #play with values using the mean function. 
 
