@@ -4,8 +4,8 @@ SeqDef <- function(tree, table){
   if(length(tree$tip.label) != nrow(table)){
     stop("tree and data should have same length")
   } # the above line stops the code if the tree and data differ in length 
-  tbl <- sum(tree$edge.length)
-  # total branch length (tbl) is calculated above 
+  td <- max(branching.times(tree))
+  # tree depth (td) is calculated above 
   for(i in 1:length(tree$tip.label)){
     focal.tip <- tree$tip.label[i] #here we look through our tip labels 
                                     #and make one called "focal tip"
@@ -16,9 +16,7 @@ SeqDef <- function(tree, table){
         # lines 13:15 above ensure that our focal and current tip are not
           # the same two tips. this prevents arbitrary comparisons. 
         x <- c(x, 
-               (1 - fastDist(tree, 
-                             focal.tip, 
-                             cur.tip) / tbl)* 
+               (1 - ((fastDist(tree, focal.tip, cur.tip)) / 2) / td)* 
                  df$imp.vals[df$species.names == cur.tip]) 
 # lines 18:22 are the stat which takes 1 minus the pairwise distance
 # between two differing tips and divides by tbl. 
