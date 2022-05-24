@@ -65,14 +65,15 @@ SeqDef2 <- function(tree, table){if(length(tree$tip.label) != nrow(table)){
     for(j in 1:length(tree$tip.label)){
       cur.tip <- tree$tip.label[j]
       if(focal.tip != cur.tip) {
-        # lines 13:15 above ensure that our focal and current tip are not
-        # the same two tips. this prevents arbitrary comparisons. 
+        # lines 13:15 above account for conditions
+        # where our focal and current tip are not
+        # the same. If this is the case, lines 71:73 are executed
         z <- c(z, 
                (1 - ((fastDist(tree, focal.tip, cur.tip)) / 2) / td)* 
                  df$data.vals[df$species.names == cur.tip]) 
         # lines 18:22 are the stat which takes 1 minus the pairwise distance
-        # between two differing tips and divides by tbl. 
-        # next, multiply this value by the importance value for this tip (species)
+        # between two differing tips and divides by td. 
+        # next, multiply this value by the data value for this tip. 
       }else{
         z <- c(z, df$data.vals[df$species.names == cur.tip])
       } # lines 26:27 are used in the event that the our focal tip and cur.tip
@@ -80,19 +81,20 @@ SeqDef2 <- function(tree, table){if(length(tree$tip.label) != nrow(table)){
       
     }
     df$syn.dat.vals[df$species.names == focal.tip] <- 1 - mean(z) 
-  }
+  } #line 83 creates 1-(the mean of all of the z values from lines 71:78)
+    # and stores this output in our df as a synthetic data value.
   
   df$syn.dat.vals <- (df$syn.dat.vals - min(df$syn.dat.vals)) /
     (max(df$syn.dat.vals) -min(df$syn.dat.vals))
   return(df)
 }
+#line 87:88 noramlize our syn.dat.vals between 0 and 1. 
 
 
-
-# now we want our final "significance" value to be the product of the output of
+# Next, we want our final "significance" value to be the product of the output of
 #SeqDef and SeqDef2. 
 
-#prod( syn.imp.vals from func1 , syn.dat.vals from func2)
+# prod( syn.imp.vals from func1 * syn.dat.vals from func2)
   
 
 
