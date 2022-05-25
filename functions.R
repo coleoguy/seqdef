@@ -29,7 +29,8 @@ SeqDef <- function(tree, table){
     }
     df$syn.imp.vals[df$species.names == focal.tip] <- mean(x) 
 # line 32 stores the mean value of x that we got from earlier inside a 
-# data.frame as "synthetic importance values" (syn.imp.vals) when the species name is 
+# data.frame as "synthetic importance values" (syn.imp.vals) 
+    # when the species name is 
 # the same as the focal.tip we were comparing our cur.tip with. 
   }
   
@@ -42,16 +43,12 @@ SeqDef <- function(tree, table){
 # Line 40 returns our data frame with our newly calculated synthetic importance 
 #values. 
 
-
-
-# Incorporating the Data stat
-
-
+# Incorporating the Data data
 #given a tree with random amounts of sequence data (table), 
 #and a tree (0 being no data, 
 # and 1 being all the data)... we need to find a way to calculate which  
-# species need to be sequenced more... and then the product of this value, 
-# and our synthetic importance value will give overall sequence desireability. 
+# species need to be sequenced more... and then the ----- of this value, 
+# and our synthetic importance value will give overall sequence desirability. 
 
 SeqDef2 <- function(tree, table){if(length(tree$tip.label) != nrow(table)){
   stop("tree and data should have same length")
@@ -84,15 +81,17 @@ SeqDef2 <- function(tree, table){if(length(tree$tip.label) != nrow(table)){
   } #line 83 creates 1-(the mean of all of the z values from lines 71:78)
     # and stores this output in our df as a synthetic data value.
   
+  #line 87:88 normalize our syn.dat.vals between 0 and 1.
   df$syn.dat.vals <- (df$syn.dat.vals - min(df$syn.dat.vals)) /
     (max(df$syn.dat.vals) -min(df$syn.dat.vals))
   return(df)
 }
-#line 87:88 noramlize our syn.dat.vals between 0 and 1. 
+ 
 
 
-# Next, we want our final "significance" value to be the product of the output of
-#SeqDef and SeqDef2. 
+# Next, we want our final "significance" value to be the product (or mean?)
+# of the output of
+# SeqDef and SeqDef2. 
 
 # prod( syn.imp.vals from func1 * syn.dat.vals from func2)
   

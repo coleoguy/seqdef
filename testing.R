@@ -1,51 +1,16 @@
 
-###getting the required packages (step 1), and loading them. 
+
+#### Loading required packages.####
 library(ape)
 library(phytools)
 
+
 # Here we pull in the functions that we have written
 source("functions.R") 
-#play with values using the mean function. 
-
-
-#### random tree data 
-
-tree <- rcoal(50)
-
-### inputs for the table
-imp.vals <- sample(c(0,1), 50, replace=T, prob=c(.9,.1))
-data.vals <- sample(50)
-species.names <- tree$tip.label ### these are the species names 
-df <- data.frame(species.names, imp.vals, data.vals)
-
-SeqDef(tree = tree, table = df)
-
-plot(tree)
-tiplabels()
-
-
-
-# Stress testing the stat-model 
 
 # 1
-tree <- rcoal(25)
-
-### inputs for the table
-imp.vals <- sample(c(0,1), 25, replace=T, prob=c(.8,.2))
-data.vals <- sample(25)
-species.names <- tree$tip.label ### these are the species names 
-
-
-df <- data.frame(species.names, imp.vals, data.vals)
-
-
-SeqDef(tree = tree, table = df)
-
-plot(tree, tip.color = "black")
-
-
-#2-------------------------------------------------------------------
-taxaN <- 10
+#### Generating tree, importance and data values ####
+taxaN <- 5
 tree <- rcoal(taxaN)
 plot(tree)
 ### inputs for the table
@@ -53,40 +18,61 @@ imp.vals <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 data.vals <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 species.names <- tree$tip.label ### these are the species names 
 
+df <- data.frame( species.names,  imp.vals,  data.vals )
 
-df <- data.frame(species.names, imp.vals, data.vals)
-
-# to get syn.imp.vals
+#### Using the two functions to get synthetic values ####
+# Get syn.imp.vals
 syn.imp.table <- SeqDef(tree=tree, table=df)
-# to get syn.dat.vals
+# Get syn.dat.vals
 syn.dat.table <- SeqDef2(tree = tree, table = df)
 
+# Adding 0.01 to each of the syn.dat.vals so that zeros won't skew
+# the final numeric as much. 
+syn.dat.table$syn.dat.vals <- syn.dat.table$syn.dat.vals + 0.01
+syn.imp.table$syn.imp.vals <- syn.imp.table$syn.imp.vals + 0.01
 
-final.df1 <- data.frame(syn.dat.table$syn.dat.vals,syn.imp.table$syn.imp.vals)
+syn.val.frame <- data.frame(syn.imp.table$syn.imp.vals, 
+                            syn.dat.table$syn.dat.vals)
 
-avg.dat <- (final.df1[1] + final.df1[2])/2
-product.dat <- final.df1[1] * final.df1[2]
+#### Finding the quotient of synthetic values for each tip ####
+div.dat <- syn.imp.table[4] / syn.dat.table[4] 
+# The problem with line 37 is that it doesn't account for which value is larger
 
-final.df2 <- data.frame(syn.dat.table$syn.dat.vals, syn.imp.table$syn.imp.vals, 
-                        avg.dat, product.dat)
+# Lines 39:51 is me trying to write a loop that ensures the larger 
+# of the synthetic values is always in the numerator
 
-names(final.df2)[names(final.df2) == "syn.dat.table.syn.dat.vals"] <- "avg.dat"
+for(i in 1:length(syn.val.frame$syn.imp.table.syn.imp.vals)){
+  focal.tip <- syn.val.frame$syn.imp.table.syn.imp.vals[i] 
+  z <- c()  
+  for(j in 1:length(syn.val.frame$syn.dat.table.syn.dat.vals)){
+    cur.tip <- syn.val.frame$syn.dat.table.syn.dat.vals[j]
+    if(focal.tip >= cur.tip) {
+      z <- c( i / j )}
+    else{
+      z <- c( j / i)
+  
+    }
+  }
+}
 
-names(final.df2)[names(final.df2) == "syn.dat.table.syn.dat.vals.1"] <- "products"
+# NORMALIZE the quotient outputs below ?
 
+# div.dat <- (div.dat$syn.imp.vals - min(div.dat$syn.imp.vals)) /
+#  (max(div.dat$syn.imp.vals) -min(div.dat$syn.imp.vals))
 
-plot(tree, tip.color = "blue", cex=0.95, node.color = "black", 
-      main="Tree With Synthetic Importance Values")
+# Making a final df that has all of the values used for this data-set. 
+final.df <- data.frame(species.names,
+                        imp.vals,
+                        data.vals ,syn.dat.table$syn.dat.vals, 
+                        syn.imp.table$syn.imp.vals, div.dat)
 
+#### ADJUSTING COLUMN NAMES of final.df ####
 
+names(final.df)[names(final.df) == "syn.imp.vals"]<- "quoteints (imp/dat)"
 
+names(final.df)[names(final.df) == "syn.dat.table.syn.dat.vals"]<-"syn.dat.vals"
 
-
-
-
-
-
-
+names(final.df)[names(final.df) == "syn.imp.table.syn.imp.vals"]<-"syn.imp.vals"
 
 
 
