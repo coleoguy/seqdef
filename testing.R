@@ -28,47 +28,50 @@ syn.dat.table <- SeqDef2(tree = tree, table = df)
 
 # Adding 0.01 to each of the syn.dat.vals so that zeros won't skew
 # the final numeric as much. 
-syn.dat.table$syn.dat.vals <- syn.dat.table$syn.dat.vals + 0.01
-syn.imp.table$syn.imp.vals <- syn.imp.table$syn.imp.vals + 0.01
 
 syn.val.frame <- data.frame(syn.imp.table$syn.imp.vals, 
                             syn.dat.table$syn.dat.vals)
 
-#### Finding the quotient of synthetic values for each tip ####
-div.dat <- syn.imp.table[4] / syn.dat.table[4] 
-# The problem with line 37 is that it doesn't account for which value is larger
-
-# Lines 39:51 is me trying to write a loop that ensures the larger 
-# of the synthetic values is always in the numerator
-
-for(i in 1:length(syn.val.frame$syn.imp.table.syn.imp.vals)){
-  focal.tip <- syn.val.frame$syn.imp.table.syn.imp.vals[i] 
-  z <- c()  
-  for(j in 1:length(syn.val.frame$syn.dat.table.syn.dat.vals)){
-    cur.tip <- syn.val.frame$syn.dat.table.syn.dat.vals[j]
-    if(focal.tip >= cur.tip) {
-      z <- c( i / j )}
-    else{
-      z <- c( j / i)
-  
-    }
-  }
+# finding the distance from the origin to each syn.point 
+for(i in 1:dim(syn.val.frame)[1]){
+  #Perform calculations and append to df
+  syn.val.frame$combined.vals[i] <- 
+    sqrt(syn.val.frame$syn.imp.table.syn.imp.vals[i]^2 + 
+           syn.val.frame$syn.dat.table.syn.dat.vals[i]^2)
 }
 
-# NORMALIZE the quotient outputs below ?
 
-# div.dat <- (div.dat$syn.imp.vals - min(div.dat$syn.imp.vals)) /
-#  (max(div.dat$syn.imp.vals) -min(div.dat$syn.imp.vals))
+dim(syn.val.frame)
+# Lines 39:51 is me trying to write a loop that ensures the larger 
+# of the synthetic values is always in the numerator
+#for(i in 1:length(syn.val.frame$syn.imp.table.syn.imp.vals)){
+  #focal.tip <- syn.val.frame$syn.imp.table.syn.imp.vals[i] 
+ # z <- c()  
+ # for(j in 1:length(syn.val.frame$syn.dat.table.syn.dat.vals)){
+   # cur.tip <- syn.val.frame$syn.dat.table.syn.dat.vals[j]
+  # if(focal.tip >= cur.tip) {
+   #   z <- c( i / j )}
+   # else{
+    #  z <- c( j / i)
+  
+   # }
+  #}
+#}
+
+# NORMALIZE the final outputs below ?
+
+# sum.dat <- (sum.dat$syn.imp.vals - min(sum.dat$syn.imp.vals)) /
+#  (max(sum.dat$syn.imp.vals) -min(sum.dat$syn.imp.vals))
 
 # Making a final df that has all of the values used for this data-set. 
 final.df <- data.frame(species.names,
                         imp.vals,
                         data.vals ,syn.dat.table$syn.dat.vals, 
-                        syn.imp.table$syn.imp.vals, div.dat)
+                        syn.imp.table$syn.imp.vals, combined.vals)
 
 #### ADJUSTING COLUMN NAMES of final.df ####
 
-names(final.df)[names(final.df) == "syn.imp.vals"]<- "quoteints (imp/dat)"
+names(final.df)[names(final.df) == "syn.imp.vals"]<- "Final Values"
 
 names(final.df)[names(final.df) == "syn.dat.table.syn.dat.vals"]<-"syn.dat.vals"
 
