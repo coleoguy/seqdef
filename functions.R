@@ -1,11 +1,11 @@
-##Making a function that will generate syn.imp.vals from a tree and a table. 
+# Making a function that will generate syn.imp.vals from a tree and a table. 
 
 SeqDef <- function(tree, table){
   if(length(tree$tip.label) != nrow(table)){
-    stop("tree and data should have same length")
-  } # the above line stops the code if the tree and data differ in length 
+    stop("Tree and Data should have same Length")
+  } # The above line stops the code if the tree and data differ in length 
   td <- max(branching.times(tree))
-  # tree depth (td) is calculated above 
+  # Tree depth (td) is calculated above 
   for(i in 1:length(tree$tip.label)){
     focal.tip <- tree$tip.label[i] #here we look through our tip labels 
                                     #and make one called "focal tip"
@@ -25,7 +25,6 @@ SeqDef <- function(tree, table){
         x <- c(x, df$imp.vals[df$species.names == cur.tip])
       } # lines 26:27 are used in the event that the our focal tip and cur.tip
         # are in fact the same. when this occurs we just get back the imp.val. 
-      
     }
     df$syn.imp.vals[df$species.names == focal.tip] <- mean(x) 
 # line 32 stores the mean value of x that we got from earlier inside a 
@@ -33,7 +32,6 @@ SeqDef <- function(tree, table){
     # when the species name is 
 # the same as the focal.tip we were comparing our cur.tip with. 
   }
-  
   df$syn.imp.vals <- (df$syn.imp.vals - min(df$syn.imp.vals)) /
     (max(df$syn.imp.vals) -min(df$syn.imp.vals))
   return(df)
