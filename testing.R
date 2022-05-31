@@ -43,7 +43,7 @@ for(i in 1:100){
 }
 
 
-
+cor(results[,1], results[,2])
 
 
 

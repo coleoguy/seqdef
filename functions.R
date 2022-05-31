@@ -64,15 +64,6 @@ PlotSeqDef <- function(tree, df, data.col){
 
 
 
-
-
-
-
-# Next, we want our final "significance" value to be the product (or mean?)
-# of the output of
-# SeqDef and SeqDef2. 
-
-# prod( syn.imp.vals from func1 * syn.dat.vals from func2)
   
 
 
