@@ -1,9 +1,10 @@
 # Making a function that will generate syn.imp.vals from a tree and a table. 
 
-SeqDef <- function(tree, table){
-  if(length(tree$tip.label) != nrow(table)){
+SeqDef <- function(tree, df, data.col, invert){
+  if(length(tree$tip.label) != nrow(df)){
     stop("Tree and Data should have same Length")
-  } # The above line stops the code if the tree and data differ in length 
+  } 
+  # The above line stops the code if the tree and data differ in length 
   td <- max(branching.times(tree))
   # Tree depth (td) is calculated above 
   for(i in 1:length(tree$tip.label)){
@@ -17,24 +18,28 @@ SeqDef <- function(tree, table){
           # the same two tips. this prevents arbitrary comparisons. 
         x <- c(x, 
                (1 - ((fastDist(tree, focal.tip, cur.tip)) / 2) / td)* 
-                 df$imp.vals[df$species.names == cur.tip]) 
+                 df[,data.col][df$species == cur.tip]) 
 # lines 18:22 are the stat which takes 1 minus the pairwise distance
 # between two differing tips and divides by tbl. 
 # next, multiply this value by the importance value for this tip (species)
       }else{
-        x <- c(x, df$imp.vals[df$species.names == cur.tip])
+        x <- c(x, df[,data.col][df$species == cur.tip])
       } # lines 26:27 are used in the event that the our focal tip and cur.tip
         # are in fact the same. when this occurs we just get back the imp.val. 
     }
-    df$syn.imp.vals[df$species.names == focal.tip] <- mean(x) 
+    if(invert){
+      df$syn.imp.vals[df$species == focal.tip] <- 1 - mean(x) 
+    }else{
+      df$syn.imp.vals[df$species == focal.tip] <- mean(x) 
+    }
 # line 32 stores the mean value of x that we got from earlier inside a 
 # data.frame as "synthetic importance values" (syn.imp.vals) 
     # when the species name is 
 # the same as the focal.tip we were comparing our cur.tip with. 
   }
-  df$syn.imp.vals <- (df$syn.imp.vals - min(df$syn.imp.vals)) /
-    (max(df$syn.imp.vals) -min(df$syn.imp.vals))
-  return(df)
+    results <- (df$syn.imp.vals - min(df$syn.imp.vals)) /
+      (max(df$syn.imp.vals) -min(df$syn.imp.vals))
+  return(results)
 }
 
 # Lines 38:39 are used to normalize syn.imp.vals into values between 0 and 1.
@@ -48,43 +53,19 @@ SeqDef <- function(tree, table){
 # species need to be sequenced more... and then the ----- of this value, 
 # and our synthetic importance value will give overall sequence desirability. 
 
-SeqDef2 <- function(tree, table){if(length(tree$tip.label) != nrow(table)){
-  stop("tree and data should have same length")
-} # the above line stops the code if the tree and data differ in length 
-  td <- max(branching.times(tree))
-  # tree depth (td) is calculated above 
-  for(i in 1:length(tree$tip.label)){
-    focal.tip <- tree$tip.label[i] #here we look through our tip labels 
-    #and make one called "focal tip"
-    z <- c()  # z is an empty vector for use later
-    for(j in 1:length(tree$tip.label)){
-      cur.tip <- tree$tip.label[j]
-      if(focal.tip != cur.tip) {
-        # lines 13:15 above account for conditions
-        # where our focal and current tip are not
-        # the same. If this is the case, lines 71:73 are executed
-        z <- c(z, 
-               (1 - ((fastDist(tree, focal.tip, cur.tip)) / 2) / td)* 
-                 df$data.vals[df$species.names == cur.tip]) 
-        # lines 18:22 are the stat which takes 1 minus the pairwise distance
-        # between two differing tips and divides by td. 
-        # next, multiply this value by the data value for this tip. 
-      }else{
-        z <- c(z, df$data.vals[df$species.names == cur.tip])
-      } # lines 26:27 are used in the event that the our focal tip and cur.tip
-      # are in fact the same. when this occurs we just get back the imp.val. 
-      
-    }
-    df$syn.dat.vals[df$species.names == focal.tip] <- 1 - mean(z) 
-  } #line 83 creates 1-(the mean of all of the z values from lines 71:78)
-    # and stores this output in our df as a synthetic data value.
-  
-  #line 87:88 normalize our syn.dat.vals between 0 and 1.
-  df$syn.dat.vals <- (df$syn.dat.vals - min(df$syn.dat.vals)) /
-    (max(df$syn.dat.vals) -min(df$syn.dat.vals))
-  return(df)
+
+PlotSeqDef <- function(tree, df, data.col){
+  tree$edge.length <- tree$edge.length/ max(branching.times(tree))
+  plot(tree, cex=.7)
+  tiplabels(text=df[, data.col], adj=-1.5, frame="none", col="red",cex=.7)
+  tiplabels(text=as.character(df[, 4]), offset=-.1, cex=.7,frame="none", col="blue")
 }
- 
+
+
+
+
+
+
 
 
 # Next, we want our final "significance" value to be the product (or mean?)

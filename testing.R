@@ -8,33 +8,76 @@ library(phytools)
 # Here we pull in the functions that we have written
 source("functions.R") 
 
-# 1
 #### Generating tree, importance and data values ####
 taxaN <- 5
-tree <- rcoal(taxaN)
+tree <- pbtree(n=taxaN)
 plot(tree)
 ### inputs for the table
-imp.vals <- sample(x=c(0,0.8,0.5,1), size=taxaN , replace=T, prob=c(0.5,0.2,0.2,0.1))
-data.vals <- sample(x=c(0,0.8,0.5,1), size=taxaN , replace=T, prob=c(0.5,0.2,0.2,0.1))
-species.names <- tree$tip.label ### these are the species names 
+imp <- sample(x=c(0,0.8,0.5,1), size=taxaN , replace=T, prob=c(0.5,0.2,0.2,0.1))
+data <- sample(x=c(0,0.8,0.5,1), size=taxaN , replace=T, prob=c(0.5,0.2,0.2,0.1))
 
-df <- data.frame( species.names,  imp.vals,  data.vals )
+imp <- c(0,0,0,0,1)
+data <- c(0,0,0,0,1)
+
+df <- data.frame(tree$tip.label,  imp,  data)
+colnames(df)[1] <- "species"
+rm(imp,data, taxaN)
+#### Done generating example data ######
+
 
 #### Using the two functions to get synthetic values ####
+
+results <- matrix(NA, 100, 2)
+colnames(results) <- c("mean.raw","mean.syn")
+
+for(i in 1:100){
+  set.seed(i)
+  taxaN <- 100
+  tree <- pbtree(n=taxaN)
+  imp <- runif(100)
+  df <- data.frame(tree$tip.label,  imp)
+  colnames(df)[1] <- "species"
+  synvals <- SeqDef(tree=tree, df=df, data.col=2, invert=T)
+  results[i,2] <- mean(synvals)
+  results[i,1] <- mean(df[,2])
+}
+
+
+
+
+
+
+
 # Get syn.imp.vals
-syn.imp.table <- SeqDef(tree=tree, table=df)
+df <- SeqDef(tree=tree, df=df, data.col=3, invert=T)
 # Get syn.dat.vals
-syn.dat.table <- SeqDef2(tree = tree, table = df)
+
+
+
+
+
+
+
+
+
+PlotSeqDef(tree, df, 3)
 
 syn.val.frame <- data.frame(syn.imp.table$syn.imp.vals, 
                             syn.dat.table$syn.dat.vals)
+
+
+
+
+
+
+
 
   #Finding the distance from the origin to each syn.point 
 for(i in 1:dim(syn.val.frame)[1]){
   #Perform calculations and append to df
   syn.val.frame$combined.vals[i] <- 
-    sqrt(syn.val.frame$syn.imp.table.syn.imp.vals[i]^2 + 
-           syn.val.frame$syn.dat.table.syn.dat.vals[i]^2)
+    sqrt(syn.val.frame$syn.imp.table.syn.imp.vals^2 + 
+           syn.val.frame$syn.dat.table.syn.dat.vals^2)
 }
 
 
