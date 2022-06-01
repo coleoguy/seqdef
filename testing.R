@@ -31,20 +31,21 @@ results <- matrix(NA, 100, 2)
 colnames(results) <- c("mean.raw","mean.syn")
 
 for(i in 1:100){
+  print(i)
   set.seed(i)
-  taxaN <- 100
+  taxaN <- 50
   tree <- pbtree(n=taxaN)
-  imp <- runif(100)
+  imp <- runif(taxaN)
   df <- data.frame(tree$tip.label,  imp)
   colnames(df)[1] <- "species"
-  synvals <- SeqDef(tree=tree, df=df, data.col=2, invert=T)
+  synvals <- SeqDef(tree=tree, df=df, data.col=2, invert=T, scale=F)
   results[i,2] <- mean(synvals)
   results[i,1] <- mean(df[,2])
 }
 
 
 
-cor(results[,1], results[,2])
+cor(results[1:70,1], results[1:70,2])
 
 
 

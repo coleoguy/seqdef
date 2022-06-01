@@ -1,6 +1,6 @@
 # Making a function that will generate syn.imp.vals from a tree and a table. 
 
-SeqDef <- function(tree, df, data.col, invert){
+SeqDef <- function(tree, df, data.col, invert, scale){
   if(length(tree$tip.label) != nrow(df)){
     stop("Tree and Data should have same Length")
   } 
@@ -35,8 +35,12 @@ SeqDef <- function(tree, df, data.col, invert){
     # when the species name is 
 # the same as the focal.tip we were comparing our cur.tip with. 
   }
-    results <- (df$syn.imp.vals - min(df$syn.imp.vals)) /
+    if(scale){
+      results <- (df$syn.imp.vals - min(df$syn.imp.vals)) /
       (max(df$syn.imp.vals) -min(df$syn.imp.vals))
+    }else{
+      results <- df$syn.imp.vals
+    }
   return(results)
 }
 
