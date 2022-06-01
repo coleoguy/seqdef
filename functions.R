@@ -14,8 +14,6 @@ SeqDef <- function(tree, df, data.col, invert){
     for(j in 1:length(tree$tip.label)){
       cur.tip <- tree$tip.label[j]
       if(focal.tip != cur.tip) {
-        # lines 13:15 above ensure that our focal and current tip are not
-          # the same two tips. this prevents arbitrary comparisons. 
         x <- c(x, 
                (1 - ((fastDist(tree, focal.tip, cur.tip)) / 2) / td)* 
                  df[,data.col][df$species == cur.tip]) 
@@ -60,13 +58,6 @@ PlotSeqDef <- function(tree, df, data.col){
   tiplabels(text=df[, data.col], adj=-1.5, frame="none", col="red",cex=.7)
   tiplabels(text=as.character(df[, 4]), offset=-.1, cex=.7,frame="none", col="blue")
 }
-
-
-
-
-  
-
-
 
 
 

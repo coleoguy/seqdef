@@ -43,6 +43,7 @@ for(i in 1:100){
 }
 
 
+
 cor(results[,1], results[,2])
 
 
@@ -64,12 +65,6 @@ PlotSeqDef(tree, df, 3)
 
 syn.val.frame <- data.frame(syn.imp.table$syn.imp.vals, 
                             syn.dat.table$syn.dat.vals)
-
-
-
-
-
-
 
 
   #Finding the distance from the origin to each syn.point 
