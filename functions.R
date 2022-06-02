@@ -17,9 +17,6 @@ SeqDef <- function(tree, df, data.col, invert, scale){
         x <- c(x, 
                (1 - ((fastDist(tree, focal.tip, cur.tip)) / 2) / td)* 
                  df[,data.col][df$species == cur.tip]) 
-# lines 18:22 are the stat which takes 1 minus the pairwise distance
-# between two differing tips and divides by tbl. 
-# next, multiply this value by the importance value for this tip (species)
       }else{
         x <- c(x, df[,data.col][df$species == cur.tip])
       } # lines 26:27 are used in the event that the our focal tip and cur.tip

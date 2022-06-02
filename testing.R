@@ -9,7 +9,7 @@ library(phytools)
 source("functions.R") 
 
 #### Generating tree, importance and data values ####
-taxaN <- 5
+
 tree <- pbtree(n=taxaN)
 plot(tree)
 ### inputs for the table
@@ -43,9 +43,9 @@ for(i in 1:100){
   results[i,1] <- mean(df[,2])
 }
 
+plot(tree)
 
-
-cor(results[1:70,1], results[1:70,2])
+cor(results[,2], results[,1])
 
 
 
@@ -94,9 +94,7 @@ final.df <- data.frame(species.names,
 
 #### ADJUSTING COLUMN NAMES of final.df ####
 
-names(final.df)[names(final.df) == "syn.dat.table.syn.dat.vals"]<-"syn.dat.vals"
 
-names(final.df)[names(final.df) == "syn.imp.table.syn.imp.vals"]<-"syn.imp.vals"
 
 
 
