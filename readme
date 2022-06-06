@@ -1,3 +1,9 @@
 This repository contains all code for development of the seqdef statistic.
 
-Functions: contains files with functions used in project.
+To install the latest version of this package:
+
+library(devtools)
+
+install_github('coleoguy/seqdef')
+
+library(seqdef)
