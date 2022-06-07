@@ -28,7 +28,7 @@ divided by the branch length, multiplied by the given data column value.
 
 
 \examples{
-hello()
+Howdy ∆
 tree <- pbtree(n=taxaN)
 imp <- c(0,0,0,0,1)
 data <- c(0,0,0,0,1)
