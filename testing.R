@@ -92,14 +92,3 @@ final.df <- data.frame(species.names,
                         data.vals ,syn.dat.table$syn.dat.vals, 
                         syn.imp.table$syn.imp.vals, syn.val.frame$combined.vals)
 
-#### ADJUSTING COLUMN NAMES of final.df ####
-
-
-
-
-
-
-
-
-
-
