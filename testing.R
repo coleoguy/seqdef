@@ -9,19 +9,19 @@ library(phytools)
 source("functions.R") 
 
 #### Generating tree, importance and data values ####
-
+taxaN <- 10
 tree <- pbtree(n=taxaN)
 plot(tree)
-### inputs for the table
-imp <- sample(x=c(0,0.8,0.5,1), size=taxaN , replace=T, prob=c(0.5,0.2,0.2,0.1))
-data <- sample(x=c(0,0.8,0.5,1), size=taxaN , replace=T, prob=c(0.5,0.2,0.2,0.1))
+edgelabels(text=round(tree$edge.length,3),frame="none")
+# inputs for the table
+imp <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
+data <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 
-imp <- c(0,0,0,0,1)
-data <- c(0,0,0,0,1)
+
 
 df <- data.frame(tree$tip.label,  imp,  data)
 colnames(df)[1] <- "species"
-rm(imp,data, taxaN)
+# rm(imp,data, taxaN)
 #### Done generating example data ######
 
 
@@ -51,8 +51,8 @@ cor(results[,2], results[,1])
 
 
 # Get syn.imp.vals
-df <- SeqDef(tree=tree, df=df, data.col=3, invert=T)
-# Get syn.dat.vals
+
+df1 <- SeqDef(tree=tree, df=df, data.col=3, invert=T, scale= F)
 
 
 
@@ -77,14 +77,9 @@ for(i in 1:dim(syn.val.frame)[1]){
 }
 
 
-# dim(syn.val.frame)
 
 
 
-# Normalization Function Below 
-# combined.vals <- (syn.val.frame$combined.vals - 
-# min(syn.val.frame$combined.vals)) /
-#  (max(syn.val.frame$combined.vals) -min(syn.val.frame$combined.vals))
 
 # Making a final df that has all of the values used for this data-set. 
 final.df <- data.frame(species.names,
