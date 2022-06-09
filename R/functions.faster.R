@@ -77,7 +77,7 @@ PlotSeqDef <- function(tree, df, data.col){
   tree$edge.length <- tree$edge.length/ max(branching.times(tree))
   plot(tree, cex=.7)
   tiplabels(text=df[, data.col], adj=-1.5, frame="none", col="red",cex=.7)
-  tiplabels(text=as.character(df[, 4]), offset=-.1, cex=.7,frame="none", col="blue")
+  tiplabels(text=as.character(df[ , 4]), offset=-.1, cex=.7,frame="none", col="blue")
 }
 
 

@@ -45,13 +45,6 @@ SeqDef <- function(tree, df, data.col, invert, scale){
 # Line 40 returns our data frame with our newly calculated synthetic importance 
 #values. 
 
-# Incorporating the Data data
-#given a tree with random amounts of sequence data (table), 
-#and a tree (0 being no data, 
-# and 1 being all the data)... we need to find a way to calculate which  
-# species need to be sequenced more... and then the ----- of this value, 
-# and our synthetic importance value will give overall sequence desirability. 
-
 
 PlotSeqDef <- function(tree, df, data.col){
   tree$edge.length <- tree$edge.length/ max(branching.times(tree))

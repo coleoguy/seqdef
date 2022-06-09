@@ -11,13 +11,15 @@ source("functions.R")
 #### Generating tree, importance and data values ####
 taxaN <- 10
 tree <- pbtree(n=taxaN)
-plot(tree)
-edgelabels(text=round(tree$edge.length,3),frame="none")
+plot(tree, cex= 1, main= "Tree", offset = 1, adj= 2)
+edgelabels(text=round(tree$edge.length,3),frame="none", col = "red", cex=0.8)
+
 # inputs for the table
 imp <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 data <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 
-
+??edgelabels
+??offset
 
 df <- data.frame(tree$tip.label,  imp,  data)
 colnames(df)[1] <- "species"
@@ -45,16 +47,15 @@ for(i in 1:100){
 
 plot(tree)
 
-cor(results[,2], results[,1])
+
 
 
 
 
 # Get syn.imp.vals
 
-df1 <- SeqDef(tree=tree, df=df, data.col=3, invert=T, scale= F)
-
-
+final <- SeqDef(tree=tree, df=df, data.col=3, invert=T, scale= F)
+final
 
 
 
