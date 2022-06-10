@@ -3,7 +3,7 @@ Type: Package
 Title: Calculates and displays the sequencing defficiency statistic
 Version: 0.1.0
 Author: Garrett Fissel and Heath Blackmon
-Maintainer: coleoguy@gmail.com
+Maintainer: Heath Blackmon <coleoguy@gmail.com>
 Description: We should say more here later.
 License: GPL (>=2)
 Encoding: UTF-8
