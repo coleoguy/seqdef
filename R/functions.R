@@ -1,56 +1,47 @@
-# Making a function that will generate syn.imp.vals from a tree and a table. 
-
 SeqDef <- function(tree, df, data.col, invert, scale){
+  # The above line stops the code if the tree and data differ in length 
   if(length(tree$tip.label) != nrow(df)){
     stop("Tree and Data should have same Length")
   } 
-  # The above line stops the code if the tree and data differ in length 
   td <- max(branching.times(tree))
-  # Tree depth (td) is calculated above 
+  dist.matrix <- cophenetic.phylo(tree)
+  dist.prop <- 1 - ((dist.matrix/2) / td)
+  synscores <- vector(length = length(tree$tip.label))
+  names(synscores) <- tree$tip.label
   for(i in 1:length(tree$tip.label)){
-    focal.tip <- tree$tip.label[i] #here we look through our tip labels 
-                                    #and make one called "focal tip"
-    x <- c()  # x is an empty vector for use later
+    focal.tip <- tree$tip.label[i] 
+    x <- vector(length = length(tree$tip.label))  
     for(j in 1:length(tree$tip.label)){
       cur.tip <- tree$tip.label[j]
-      if(focal.tip != cur.tip) {
-        x <- c(x, 
-               (1 - ((fastDist(tree, focal.tip, cur.tip)) / 2) / td)* 
-                 df[,data.col][df$species == cur.tip]) 
-      }else{
-        x <- c(x, df[,data.col][df$species == cur.tip])
-      } # lines 26:27 are used in the event that the our focal tip and cur.tip
-        # are in fact the same. when this occurs we just get back the imp.val. 
+      x[j] <- dist.prop[row.names(dist.prop) == cur.tip, 
+                          colnames(dist.prop) == focal.tip] * 
+              df[, data.col][df[, 1] == cur.tip]
     }
     if(invert){
-      df$syn.imp.vals[df$species == focal.tip] <- 1 - mean(x) 
+      synscores[i] <- 1 - mean(x) 
     }else{
-      df$syn.imp.vals[df$species == focal.tip] <- mean(x) 
+      synscores[i] <-  mean(x) 
     }
-# line 32 stores the mean value of x that we got from earlier inside a 
-# data.frame as "synthetic importance values" (syn.imp.vals) 
-    # when the species name is 
-# the same as the focal.tip we were comparing our cur.tip with. 
   }
-    if(scale){
-      results <- (df$syn.imp.vals - min(df$syn.imp.vals)) /
-      (max(df$syn.imp.vals) -min(df$syn.imp.vals))
-    }else{
-      results <- df$syn.imp.vals
-    }
+  if(scale){
+    synscores <- (synscores - min(synscores)) /
+      (max(synscores) -min(synscores))
+  }
+  # prepare the results
+  empscores <- df[, data.col]
+  results <- list(tree, synscores, empscores)
+  class(results) <- "seqdef"
   return(results)
 }
 
-# Lines 38:39 are used to normalize syn.imp.vals into values between 0 and 1.
-# Line 40 returns our data frame with our newly calculated synthetic importance 
-#values. 
-
-
-PlotSeqDef <- function(tree, df, data.col){
+plot.seqdef <- function(results){
+  tree <- results[[1]]
+  synscores <- results[[2]]
+  empscores <- results[[3]]
   tree$edge.length <- tree$edge.length/ max(branching.times(tree))
   plot(tree, cex=.7)
-  tiplabels(text=df[, data.col], adj=-1.5, frame="none", col="red",cex=.7)
-  tiplabels(text=as.character(df[, 4]), offset=-.1, cex=.7,frame="none", col="blue")
+  tiplabels(text=empscores, adj=-1.5, frame="none", col="red",cex=.7)
+  tiplabels(text=synscores, offset=-.1, cex=.7,frame="none", col="blue")
 }
 
 

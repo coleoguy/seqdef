@@ -1,31 +1,27 @@
-
-
 #### Loading required packages.####
-library(ape)
 library(phytools)
 
 
 # Here we pull in the functions that we have written
-source("functions.R") 
+source("R/functions.R") 
+source("R/functions.faster.R") 
 
 #### Generating tree, importance and data values ####
-taxaN <- 10
+taxaN <- 5
 tree <- pbtree(n=taxaN)
-plot(tree, cex= 1, main= "Tree", offset = 1, adj= 2)
-edgelabels(text=round(tree$edge.length,3),frame="none", col = "red", cex=0.8)
+plot(tree, cex= 1)
 
 # inputs for the table
 imp <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 data <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 
-??edgelabels
-??offset
 
 df <- data.frame(tree$tip.label,  imp,  data)
 colnames(df)[1] <- "species"
-# rm(imp,data, taxaN)
+rm(imp,data, taxaN)
 #### Done generating example data ######
-
+synvals2 <- SeqDef2(tree=tree, df=df, data.col=2, invert=T, scale=T)
+plot(synvals2)
 
 #### Using the two functions to get synthetic values ####
 
@@ -88,3 +84,13 @@ final.df <- data.frame(species.names,
                         data.vals ,syn.dat.table$syn.dat.vals, 
                         syn.imp.table$syn.imp.vals, syn.val.frame$combined.vals)
 
+
+#### Sample Data ####
+tree <- pbtree(n=5)
+plot(tree)
+
+imp <- c(0,0,0,0,1)
+data <- c(0,0,0,0,1)
+
+df <- data.frame(tree$tip.label,  imp,  data)
+colnames(df)[1] <- "species" 
