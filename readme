@@ -7,3 +7,22 @@ library(devtools)
 install_github('coleoguy/seqdef')
 
 library(seqdef)
+
+
+example usage:
+
+library(phytools)
+library(seqdef)
+#### Generating tree, importance and data values ####
+taxaN <- 5
+tree <- pbtree(n=taxaN)
+plot(tree, cex= 1)
+# inputs for the table
+imp <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
+data <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
+df <- data.frame(tree$tip.label,  imp,  data)
+colnames(df)[1] <- "species"
+rm(imp,data, taxaN)
+#### Done generating example data ######
+synvals <- SeqDef(tree=tree, df=df, data.col=2, invert=T, scale=T)
+plot(synvals)
