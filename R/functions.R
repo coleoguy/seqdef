@@ -1,5 +1,4 @@
-SeqDef <- function(tree, df, data.col, invert, scale){
-  # The above line stops the code if the tree and data differ in length 
+SeqDef <- function(tree, df, data.col = 2, invert = F, scale = T){
   if(length(tree$tip.label) != nrow(df)){
     stop("Tree and Data should have same Length")
   } 
@@ -20,12 +19,12 @@ SeqDef <- function(tree, df, data.col, invert, scale){
     if(invert){
       synscores[i] <- 1 - mean(x) 
     }else{
-      synscores[i] <-  mean(x) 
+      synscores[i] <- mean(x) 
     }
   }
   if(scale){
     synscores <- (synscores - min(synscores)) /
-      (max(synscores) -min(synscores))
+      (max(synscores) - min(synscores))
   }
   # prepare the results
   empscores <- df[, data.col]
@@ -38,10 +37,18 @@ plot.seqdef <- function(results){
   tree <- results[[1]]
   synscores <- results[[2]]
   empscores <- results[[3]]
-  tree$edge.length <- tree$edge.length/ max(branching.times(tree))
-  plot(tree, cex=.7)
-  tiplabels(text=empscores, adj=-1.5, frame="none", col="red",cex=.7)
-  tiplabels(text=synscores, offset=-.1, cex=.7,frame="none", col="blue")
+  tree$edge.length <- tree$edge.length / max(branching.times(tree))
+  plot(tree, cex = .7)
+  tiplabels(text = empscores, 
+            adj = -1.5, 
+            frame = "none", 
+            col = "red", 
+            cex = .7)
+  tiplabels(text = synscores, 
+            offset = -.1, 
+            cex = .7, 
+            frame = "none", 
+            col = "blue")
 }
 
 
