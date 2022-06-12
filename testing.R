@@ -14,14 +14,12 @@ plot(tree, cex= 1)
 # inputs for the table
 imp <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
 data <- sample(x=c(0,1), size=taxaN , replace=T, prob=c(0.8,0.2))
-
-
 df <- data.frame(tree$tip.label,  imp,  data)
 colnames(df)[1] <- "species"
 rm(imp,data, taxaN)
 #### Done generating example data ######
-synvals2 <- SeqDef2(tree=tree, df=df, data.col=2, invert=T, scale=T)
-plot(synvals2)
+synvals <- SeqDef(tree=tree, df=df, data.col=2, invert=T, scale=T)
+plot(synvals)
 
 #### Using the two functions to get synthetic values ####
 
@@ -54,7 +52,11 @@ final <- SeqDef(tree=tree, df=df, data.col=3, invert=T, scale= F)
 final
 
 
+library(devtools)
 
+install_github('coleoguy/seqdef')
+
+library(seqdef)
 
 
 
