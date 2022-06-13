@@ -1,4 +1,4 @@
-
+# Need packages 'phytools' and 'ape'
 # Create a function with 5 arguments 
 SeqDef <- function(tree, df, data.col = 2, invert = F, scale = T){
   # This checks to make sure that the number of tips and df-rows are the same.
