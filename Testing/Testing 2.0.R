@@ -13,8 +13,8 @@ imp.vals <- sample( c(0,1), size= length(tree$tip.label),
 data.vals <- sample( c(0,1), size= length(tree$tip.label),
                      replace= T,prob=c(.8,.2))
 # Combining the synthesized values into a single data frame. 
-df <- data.frame(imp.vals, data.vals)
+df <- data.frame(tree$tip.label,  imp.vals, data.vals)
 
-SeqDef(tree, df, data.col = 1, invert = T, scale = T )
+SeqDef(tree, df, data.col = 2, invert = T, scale = T )
                     
 
