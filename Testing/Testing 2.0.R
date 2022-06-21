@@ -17,4 +17,4 @@ df <- data.frame(tree$tip.label,  imp.vals, data.vals)
 
 SeqDef(tree, df, data.col = 2, invert = T, scale = T )
                     
-
+plot.seqdef(results)
