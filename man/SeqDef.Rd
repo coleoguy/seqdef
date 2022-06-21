@@ -1,5 +1,6 @@
 \name{SeqDef}
 \alias{PlotSeqDef}
+\alias{SeqDef}
 \title{Calculate and Visualize seqdef statistic}
 \usage{
 SeqDef(tree, df, data.col, invert, scale)
