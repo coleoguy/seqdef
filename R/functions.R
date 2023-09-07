@@ -1,3 +1,4 @@
+# Basic seqdef function
 # Need packages 'phytools' and 'ape'
 # Create a function with 5 arguments 
 SeqDef <- function(tree, df, data.col = 2, invert = F, scale = T){
@@ -30,7 +31,7 @@ SeqDef <- function(tree, df, data.col = 2, invert = F, scale = T){
     for(j in 1:length(tree$tip.label)){
       cur.tip <- tree$tip.label[j]
     # Now that we have our loop to look at our two tips, we can do calculation. 
-    # From our matrix (dist.prop), we select the value corresponding to the 
+    # From our matrix dist.prop, we select the value corresponding to the 
     # two tips of interest and multiply it by a specific data column that 
     # corresponds to our current tip.
     # We assign each of these values for a given current tip to a vector (x). 
